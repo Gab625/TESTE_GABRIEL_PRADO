@@ -9,7 +9,7 @@ url_base = "https://dadosabertos.ans.gov.br/FTP/PDA/"
 target_path = "demonstracoes_contabeis/2025/"
 url_result = requests.compat.urljoin(url_base, target_path)
 
-destination_folder = "./dados_contabeis_2025"
+destination_folder = "./dados"
 os.makedirs(destination_folder, exist_ok=True)
 
 print(f"Acessando: {url_result}")
