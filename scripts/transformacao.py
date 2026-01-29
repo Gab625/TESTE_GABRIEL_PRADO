@@ -51,8 +51,6 @@ def transformar_cadop():
 
     df_cadop['REG_ANS'] = df_cadop['REG_ANS'].astype(str).str.strip()
 
-    df_cadop = df_cadop.drop_duplicates(subset=['REG_ANS'])
-    
     return df_cadop
 
 def tabela_consolidada():
