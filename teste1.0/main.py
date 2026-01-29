@@ -1,5 +1,3 @@
-import pandas as pd
-import os
 from scripts import extracao
 from scripts import transformacao
 

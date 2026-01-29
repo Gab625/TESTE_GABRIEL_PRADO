@@ -66,7 +66,7 @@ def tabela_consolidada():
     colunas_ordenadas = ['CNPJ', 'Razao_Social', 'Trimestre','Ano', 'ValorDespesas']
     df_final = df_final[colunas_ordenadas]
 
-    zip_path = "consolidado_despesas.zip"
+    zip_path = "../consolidado_despesas.zip"
     csv_name = "consolidado_despesas.csv"
 
     with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:     
