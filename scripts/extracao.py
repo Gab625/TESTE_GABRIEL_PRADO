@@ -5,7 +5,7 @@ import zipfile
 import io
 
 URL_BASE = "https://dadosabertos.ans.gov.br/FTP/PDA/"
-PASTA_DESTINO = "../dados"
+PASTA_DESTINO = "./dados"
 
 def baixar_da_url(caminho_especifico):
     URL_ALVO = requests.compat.urljoin(URL_BASE, caminho_especifico)
@@ -28,7 +28,11 @@ def baixar_da_url(caminho_especifico):
             with zipfile.ZipFile(io.BytesIO(r.content)) as z:
                 z.extractall(PASTA_DESTINO)
         else:
-            # Se for CSV direto, salva o conteúdo
             caminho_salvamento = os.path.join(PASTA_DESTINO, nome_arq)
             with open(caminho_salvamento, "wb") as f:
                 f.write(r.content)
+
+def extrair_dados():
+    baixar_da_url("demonstracoes_contabeis/2025/")
+
+    baixar_da_url("operadoras_de_plano_de_saude_ativas/")
