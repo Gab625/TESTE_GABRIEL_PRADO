@@ -12,7 +12,7 @@ def transformar_contabeis():
         caminho_contabeis = os.path.join(PASTA_DADOS, arquivo)
         print(f"Lendo dados: {arquivo}")
 
-        df = pd.read_csv(caminho_contabeis, sep=';', encoding='latin1')
+        df = pd.read_csv(caminho_contabeis, sep=';', encoding='latin1', decimal=",")
 
         df['REG_ANS'] = df['REG_ANS'].astype(str).str.strip()
 
@@ -22,7 +22,6 @@ def transformar_contabeis():
 
         filtro_despesas = df['DESCRICAO'].str.contains('Eventos|Sinistros', case=False, na=False)
         df_filtrado = df[filtro_despesas].copy()
-
         df_filtrado = df_filtrado.rename(columns={'VL_SALDO_FINAL': 'ValorDespesas'})
 
         colunas_alvo = ['REG_ANS', 'Trimestre', 'Ano', 'ValorDespesas']
