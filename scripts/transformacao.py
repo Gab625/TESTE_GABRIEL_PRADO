@@ -58,7 +58,10 @@ def tabela_consolidada():
 
     df_final = pd.merge(df_contabil, df_cadop, on='REG_ANS', how='left')
 
-    colunas_ordenadas = ['CNPJ', 'Razao_Social', 'REG_ANS', 'Trimestre','Ano', 'ValorDespesas']
+    df_final = df_final.dropna()
+    df_final = df_final[(df_final != '').all(axis=1)]
+
+    colunas_ordenadas = ['CNPJ', 'Razao_Social', 'Trimestre','Ano', 'ValorDespesas']
     df_final = df_final[colunas_ordenadas]
 
     caminho_consolidado = os.path.join(PASTA_DADOS, "RELATORIO_FINAL_ANS.csv")
