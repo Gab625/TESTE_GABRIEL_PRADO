@@ -58,6 +58,10 @@ def tabela_consolidada():
     df_contabil = transformar_contabeis()
     df_cadop = transformar_cadop()
 
+    for df in [df_contabil, df_cadop]:
+        if 'CNPJ' in df.columns:
+            df['CNPJ'] = df['CNPJ'].astype(str).str.replace(r'\.0$', '', regex=True).str.zfill(14)
+
     df_final = pd.merge(df_contabil, df_cadop, on='REG_ANS', how='left')
 
     df_final = df_final.dropna()
