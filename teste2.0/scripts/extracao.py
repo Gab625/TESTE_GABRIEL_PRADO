@@ -37,15 +37,11 @@ def extrair_dados():
         os.makedirs(pasta_destino, exist_ok=True)
         with zipfile.ZipFile(caminho_zip, 'r') as z:
             z.extractall(pasta_destino)
-            print(f"✅ Extraído com sucesso para: {pasta_destino}")
-            print(f"📄 Arquivos dentro do ZIP: {z.namelist()}")
     else:
-        print(f"❌ Erro: Arquivo não encontrado!")
-        print(f"📍 Caminho verificado: {caminho_zip}")
+        print(f"Arquivo {nome_zip} não encontrado em {diretorio_raiz}.") 
 
 if __name__ == "__main__":
     extrair_dados()
-
 
 def extrair_dados():
     baixar_arquivo("operadoras_de_plano_de_saude_ativas/Relatorio_cadop.csv")
