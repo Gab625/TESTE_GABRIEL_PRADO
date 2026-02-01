@@ -1,15 +1,14 @@
-from scripts.transformacao import carregar_dados, processar_join, gerar_agregacao_final
+from scripts.transformacao import carregar_dados, processar_join, gerar_estatisticas, exportar_resultado
 
-def executar_pipeline():
-    # 1. Carrega os dados usando as funções do outro arquivo
+def executar_pipeline():    
     df_cont = carregar_dados("./dados/consolidado_despesas.csv")
     df_cad = carregar_dados("./dados/Relatorio_cadop.csv")
     
-    # 2. Faz o Join (Ajustado os nomes das variáveis aqui)
     df_unificado = processar_join(df_cont, df_cad)
     
-    # 3. Gera o resultado
-    gerar_agregacao_final(df_unificado)
+    df_agregado = gerar_estatisticas(df_unificado)
+
+    exportar_resultado(df_agregado, nome_zip="despesas_agregadas.zip")
 
 if __name__ == "__main__":
     executar_pipeline()
