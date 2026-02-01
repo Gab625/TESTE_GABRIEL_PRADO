@@ -3,15 +3,27 @@ import zipfile
 import os
 
 def carregar_dados(caminho_csv):
-    df = pd.read_csv(caminho_csv, sep=';', encoding='latin1', dtype={'CNPJ': str, 'REG_ANS': str})
+    df = pd.read_csv(
+        caminho_csv, 
+        sep=';', 
+        encoding='latin1', 
+        quotechar='"', 
+        on_bad_lines='skip',
+        dtype=str,
+        decimal='.'
+    )
 
-    if 'ValorDespesas' in df.columns:
+    df.columns = df.columns.str.strip()
+
+    if 'ValorDespesas' in df.columns:       
         df['ValorDespesas'] = (
             df['ValorDespesas']
-            .astype(str)
             .str.replace(',', '.')
-            .astype(float)
+            .str.strip()
         )
+        df['ValorDespesas'] = pd.to_numeric(df['ValorDespesas'], errors='coerce')
+        
+        df = df.dropna(subset=['ValorDespesas'])
     
     if 'CNPJ' in df.columns:
         df['CNPJ'] = df['CNPJ'].str.replace(r'\D', '', regex=True).str.zfill(14)
@@ -47,7 +59,7 @@ def gerar_estatisticas(df_processado):
     
     return agregado
 
-def exportar_resultado(df_agregado, nome_arquivo="despesas_agregadas.csv", nome_zip="despesas_agregadas.zip"):
+def exportar_resultado(df_agregado, nome_arquivo="despesas_agregadas.csv", nome_zip="Teste_Gabriel_Prado.zip"):
     zip_path = os.path.join("..", nome_zip)
 
     df_agregado.to_csv(
@@ -55,7 +67,7 @@ def exportar_resultado(df_agregado, nome_arquivo="despesas_agregadas.csv", nome_
         sep=';', 
         index=False, 
         encoding='latin1', 
-        decimal=','
+        decimal='.'
     )
 
     with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as z:
