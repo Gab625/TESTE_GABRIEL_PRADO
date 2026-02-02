@@ -2,9 +2,35 @@
 
 # Projeto para o tratamentos de dados da ANS
 
-## 1. Teste de Integração com API Pública (Tópico 1)
+## 1. Configuração do Ambiente e Instalação
 
-### 1.1. Arquitetura da Solução
+Para garantir que o projeto execute de forma isolada e segura, siga os passos abaixo:
+
+### 1.1 Criando o Ambiente Virtual (VENV)
+
+python -m venv venv
+
+### 1.2 Ativando o ambiente virtual
+
+Windows (PowerShell): .\venv\Scripts\activate.ps1
+Windows (CMD): .\venv\Scripts\activate.bat
+Linux / macOS: source venv/bin/activate
+
+### 1.3 Instalando as dependências
+pip install -r requirements.txt
+
+### 1.4 Dependências Utilizadas
+Pandas (3.0.0): Manipulação e agregação de dados.
+
+BeautifulSoup4: Extração de dados da web.
+
+Requests: Comunicação com a API pública da ANS.
+
+NumPy: Cálculos vetoriais e estatísticos.
+
+## 2. Teste de Integração com API Pública (Tópico 1)
+
+### 2.1. Arquitetura da Solução
 A solução foi desenhada seguindo princípios de **modularidade** e **separação de responsabilidades**, facilitando a manutenção e testes isolados:
 
 * **`extracao.py`**: Gerencia o *web scraping* dinâmico e a automação de downloads.
@@ -13,7 +39,7 @@ A solução foi desenhada seguindo princípios de **modularidade** e **separaç�
 
 ---
 
-### 1.2. Justificativas das Decisões Técnicas
+### 2.2. Justificativas das Decisões Técnicas
 
 #### **Resiliência no Acesso à API Pública**
 Para lidar com a instabilidade de nomenclaturas da API da ANS, utilizei a biblioteca `BeautifulSoup`.
@@ -26,7 +52,7 @@ Para lidar com a instabilidade de nomenclaturas da API da ANS, utilizei a biblio
 
 ---
 
-### 1.3. Análise Crítica e Tratamento de Inconsistências
+### 2.3. Análise Crítica e Tratamento de Inconsistências
 
 Durante a etapa de consolidação, apliquei as seguintes tratativas para garantir a integridade analítica:
 
@@ -37,22 +63,23 @@ Durante a etapa de consolidação, apliquei as seguintes tratativas para garanti
 
 ---
 
-### 1.4. Normalização Automática de Estruturas
+### 2.4. Normalização Automática de Estruturas
 Para resolver o desafio de arquivos com formatos e colunas variadas, implementei:
 
-1.  **Identificação por Conteúdo:** O código busca a despesa através de palavras-chave (`Eventos` ou `Sinistros`) na coluna de descrição, tornando a captura independente da ordem das linhas no CSV original.
-2.  **Mapeamento de Chaves Relacionais:** O cruzamento entre a base financeira e a base cadastral (`CADOP`) é realizado através do `REG_ANS`, o identificador mais resiliente e padronizado nas publicações da ANS.
+1.  **Identificação de dados não passados no script de teste:** Dados necessários como: CNPJ e Razão_Social, não estavam nos documentos de despesas. Verifiquei que esses dados estavam na mesma base pública, porém em outro documento com nome Relatório_cadop.csv. Desse modo, foi possível realizar a inserção das colunas requeridas através do REG_ANS, que são dados comuns entre as tabelas de despesas e dados do cadop.
+2.  **Identificação por Conteúdo:** O código busca a despesa através de palavras-chave (`Eventos` ou `Sinistros`) na coluna de descrição, tornando a captura independente da ordem das linhas no CSV original.
+3.  **Mapeamento de Chaves Relacionais:** O cruzamento entre a base financeira e a base cadastral (`CADOP`) é realizado através do `REG_ANS`, o identificador mais resiliente e padronizado nas publicações da ANS.
 
 ---
 
-### 1.5. Entrega Final
+### 2.5. Entrega Final
 Ao final do processo, o sistema gera o arquivo `consolidado_despesas.csv` com as colunas padronizadas (`CNPJ`, `Razao_Social`, `Trimestre`, `Ano`, `ValorDespesas`) e realiza a compactação automática em um arquivo ZIP, conforme exigido pelos requisitos técnicos.
 
-# Teste de Transformação e Validação de Dados (Tópico 2)
+# 3. Teste de Transformação e Validação de Dados (Tópico 2)
 
 Nesta etapa, o foco foi garantir a **qualidade** e o **enriquecimento** dos dados financeiros através do cruzamento com a base cadastral das operadoras (Relatório_cadop).
 
-## 2.1. Validação de Dados e Estratégias de Tratamento
+## 3.1. Validação de Dados e Estratégias de Tratamento
 
 Para garantir a integridade dos dados antes da agregação, implementei as seguintes validações:
 
@@ -65,7 +92,7 @@ Para garantir a integridade dos dados antes da agregação, implementei as segui
 
 ---
 
-## 2.2. Enriquecimento de Dados e Tratamento de Falhas
+## 3.2. Enriquecimento de Dados e Tratamento de Falhas
 
 O enriquecimento foi realizado através do cruzamento (Join) do consolidado financeiro com o **Relatório CADOP** (Operadoras Ativas).
 
@@ -82,7 +109,7 @@ O enriquecimento foi realizado através do cruzamento (Join) do consolidado fina
 
 ---
 
-## 2.3. Agregação e Estatística Descritiva
+## 3.3. Agregação e Estatística Descritiva
 
 Implementei uma lógica de agregação para identificar o perfil de gastos por Operadora e Estado:
 
@@ -95,14 +122,14 @@ Implementei uma lógica de agregação para identificar o perfil de gastos por O
 
 ---
 
-## 2.4. Entrega e Exportação
+## 3.4. Entrega e Exportação
 O pipeline gera o arquivo `despesas_agregadas.csv` com separador `;` e codificação `latin1`, otimizado para abertura em ferramentas de BI e Excel. O arquivo final é compactado automaticamente seguindo o padrão: `Teste_Gabriel_Prado.zip`.
 
-# Teste de Banco de Dados e Análise (Tópico 3)
+# 4 Teste de Banco de Dados e Análise (Tópico 3)
 
 Nesta etapa, estruturei o ambiente de banco de dados utilizando **PostgreSQL** (versão 18.0) para suportar análises complexas e garantir a precisão dos cálculos financeiros exigidos pela ANS.
 
-## 3.1. Arquitetura e Modelagem (DDL)
+## 4.1. Arquitetura e Modelagem (DDL)
 
 ### **Justificativa de Normalização (Opção B)**
 * **Decisão:** Optei pela abordagem **Normalizada (Separada)**.
@@ -114,8 +141,7 @@ Nesta etapa, estruturei o ambiente de banco de dados utilizando **PostgreSQL** (
 
 ---
 
-
-## 3.2. Análise Crítica das Queries Analíticas
+## 4.2. Análise Crítica das Queries Analíticas
 
 ### **Query 1: Crescimento Percentual (Window Functions)**
 * **Desafio:** Como tratar operadoras com trimestres faltantes?
@@ -128,6 +154,6 @@ Nesta etapa, estruturei o ambiente de banco de dados utilizando **PostgreSQL** (
 
 ### **Query 3: Operadoras Acima da Média (CTEs)**
 * **Trade-off Técnico:** Optei pelo uso de **CTEs (Common Table Expressions)**.
-* **Justificativa:** Embora pudesse ser resolvido com subqueries, a CTE (`media_geral` e `analise_trimestral`) torna o código muito mais legível (clean code) e fácil de debugar. O otimizador de consulta do PostgreSQL trata a CTE de forma eficiente, calculando a média global uma única vez antes da comparação.
+* **Justificativa:** Embora pudesse ser resolvido com subqueries, a CTE (`media_geral` e `analise_trimestral`) torna o código muito mais legível e fácil de debugar. O otimizador de consulta do PostgreSQL trata a CTE de forma eficiente, calculando a média global uma única vez antes da comparação.
 
 ---
