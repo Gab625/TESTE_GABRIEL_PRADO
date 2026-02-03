@@ -144,7 +144,7 @@ O pipeline gera o arquivo `despesas_agregadas.csv` com separador `;` e codifica�
 
 Nesta etapa, fiz um script para tratamento do Relatorio_cadop e ser enviado para a pasta ./dados. Além disso, estruturei o ambiente de banco de dados utilizando **PostgreSQL** (versão 18.0) para suportar análises complexas e garantir a precisão dos cálculos financeiros exigidos pela ANS.
 
-Para o tratamento do cadop, entre no diretório /teste3.0 insira no terminal "python tratarcadop.py" e clique ENTER
+Para o tratamento do cadop, entre no diretório /teste3.0 insira no terminal "python main.py" e clique ENTER
 
 ## 4.1 Configuração do Banco de Dados
 
@@ -154,7 +154,7 @@ Para a persistência e análise dos dados, utilizei o PostgreSQL. Os scripts de 
 Para estruturar o banco, execute os scripts SQL presentes na pasta mencionada utilizando o Query Tool (ou psql). O esquema segue o modelo desnormalizado conforme as justificativas técnicas anteriores.
 
 4.1.2. Importação de Dados (Processo de Carga)
-A carga dos dados dos arquivos CSV para as tabelas foi realizada através da funcionalidade "Import/Export Data" do PostgreSQL. Para selecionar os dados utilize os csvs no diretório ./dados e adicionar respectivamente consolidado_despesas a tabela despesas, despesas_agregadas a tabela despesas_agregadas e Relatorio_cadop a tabela operadoras. Para garantir a integridade dos dados, utilize a seguinte configuração na aba Options:
+A carga dos dados dos arquivos CSV para as tabelas foi realizada através da funcionalidade "Import/Export Data" do PostgreSQL. Para selecionar os dados utilize os csvs no diretório ./dados e adicione manuel e respectivamente o consolidado_despesas.csv a tabela despesas, despesas_agregadas.csv a tabela despesas_agregadas e Relatorio_cadop.csv a tabela operadoras. Para garantir a integridade dos dados, utilize a seguinte configuração na aba Options:
 
 Format: CSV
 
@@ -206,3 +206,26 @@ Com os dados importados, as queries para responder aos desafios de crescimento p
 - **Justificativa:** Embora pudesse ser resolvido com subqueries, a CTE (`media_geral` e `analise_trimestral`) torna o código muito mais legível e fácil de debugar. O otimizador de consulta do PostgreSQL trata a CTE de forma eficiente, calculando a média global uma única vez antes da comparação.
 
 ---
+
+# 5 Teste de API e interface Web (Tópico 4)
+
+---
+
+### 5.1. Framework: **FastAPI (Opção B)**
+A escolha pelo **FastAPI** em vez do Flask baseia-se em:
+* **Performance:** Alta performance comparável a Node.js e Go, graças ao suporte nativo a operações assíncronas (ASGI).
+* **Produtividade:** Geração automática de documentação interativa via **Swagger UI** (`/docs`), o que acelerou o ciclo de testes durante o desenvolvimento.
+* **Segurança:** Validação de dados rigorosa utilizando tipos do Python (Pydantic), prevenindo erros de tipagem comuns em tempo de execução.
+
+### 5.2. Estratégia de Paginação: **Offset-based (Opção A)**
+Implementada através das cláusulas `LIMIT` e `OFFSET` do SQL.
+* **Justificativa:** Para o conjunto de dados das operadoras, o **Offset-based** é ideal pois permite a navegação não-linear. Dada a volumetria estável da ANS, o custo de performance do Offset é desprezível comparado à facilidade de implementação no Frontend.
+
+### 5.3. Cache vs Queries Diretas: **Opção C (Pré-Calcular)**
+As estatísticas agregadas na rota `/api/estatisticas` são processadas via SQL diretamente no PostgreSQL.
+* **Justificativa:** Optou-se pelo **pré-cálculo**. Como o banco de dados está modulado para estar desnormalizado, realizar a query demanda pouco custo computacional, apenas exigindo um `SELECT` na tabela de `Despesas_agrupadas`
+
+### 5.4. Estrutura de Resposta: **Dados + Metadados (Opção B)**
+As rotas de listagem não retornam apenas arrays puros, mas um objeto estruturado.
+* **Formato:** `{ "metadata": { "total": 0, "page": 0, ... }, "data": [...] }`
+* **Justificativa:** Essa estrutura é pensada na **facilidade de uso pelo Frontend (Vue.js)**. Ao fornecer o total de registros e páginas no "envelope" da resposta, o componente de interface consegue renderizar a barra de navegação e os contadores de forma autônoma, sem precisar de novas requisições para contar registros.
