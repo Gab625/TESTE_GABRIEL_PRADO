@@ -32,6 +32,8 @@ NumPy: Cálculos vetoriais e estatísticos.
 
 ## 2. Teste de Integração com API Pública (Tópico 1)
 
+### Para rodar o código, entre no diretório /teste1.0 insira no terminal "python main.py"
+
 ### 2.1. Arquitetura da Solução
 
 A solução foi desenhada seguindo princípios de **modularidade** e **separação de responsabilidades**, facilitando a manutenção e testes isolados:
@@ -84,6 +86,8 @@ Para resolver o desafio de arquivos com formatos e colunas variadas, implementei
 Ao final do processo, o sistema gera o arquivo `consolidado_despesas.csv` com as colunas padronizadas (`CNPJ`, `Razao_Social`, `Trimestre`, `Ano`, `ValorDespesas`) e realiza a compactação automática em um arquivo ZIP, conforme exigido pelos requisitos técnicos.
 
 # 3. Teste de Transformação e Validação de Dados (Tópico 2)
+
+### Para rodar o código, entre no diretório /teste2.0 insira no terminal "python main.py"
 
 Nesta etapa, o foco foi garantir a **qualidade** e o **enriquecimento** dos dados financeiros através do cruzamento com a base cadastral das operadoras (Relatório_cadop).
 
@@ -138,9 +142,38 @@ O pipeline gera o arquivo `despesas_agregadas.csv` com separador `;` e codifica�
 
 # 4 Teste de Banco de Dados e Análise (Tópico 3)
 
-Nesta etapa, estruturei o ambiente de banco de dados utilizando **PostgreSQL** (versão 18.0) para suportar análises complexas e garantir a precisão dos cálculos financeiros exigidos pela ANS.
+Nesta etapa, fiz um script para tratamento do Relatorio_cadop e ser enviado para a pasta ./dados. Além disso, estruturei o ambiente de banco de dados utilizando **PostgreSQL** (versão 18.0) para suportar análises complexas e garantir a precisão dos cálculos financeiros exigidos pela ANS.
 
-## 4.1. Arquitetura e Modelagem (DDL)
+Para o tratamento do cadop, entre no diretório /teste3.0 insira no terminal "python tratarcadop.py" e clique ENTER
+
+## 4.1 Configuração do Banco de Dados
+
+Para a persistência e análise dos dados, utilizei o PostgreSQL. Os scripts de criação de tabelas (DDL) está localizado no diretório /teste3.0/create_table.
+
+4.1.1. Criação das Tabelas
+Para estruturar o banco, execute os scripts SQL presentes na pasta mencionada utilizando o Query Tool (ou psql). O esquema segue o modelo desnormalizado conforme as justificativas técnicas anteriores.
+
+4.1.2. Importação de Dados (Processo de Carga)
+A carga dos dados dos arquivos CSV para as tabelas foi realizada através da funcionalidade "Import/Export Data" do PostgreSQL. Para selecionar os dados utilize os csvs no diretório ./dados e adicionar respectivamente consolidado_despesas a tabela despesas, despesas_agregadas a tabela despesas_agregadas e Relatorio_cadop a tabela operadoras. Para garantir a integridade dos dados, utilize a seguinte configuração na aba Options:
+
+Format: CSV
+
+Header: Yes (Ativado)
+
+Delimiter: ;
+
+Quote: "
+
+Escape: "
+
+Encoding: UTF-8 (ou Latin1, dependendo do arquivo de origem)
+
+Nota: Deixe as demais opções como default. O uso do delimitador ; e das aspas configuradas é essencial para que o Postgres interprete corretamente as colunas de texto (Razão Social) e os valores decimais.
+
+4.1.3. Execução das Queries Analíticas
+Com os dados importados, as queries para responder aos desafios de crescimento percentual, distribuição por UF e análise de médias podem ser executadas diretamente sobre as tabelas populadas que estão no diretório teste3.0/queries, é possível utilizar direto no query tool do pgadmin, mas se houver preferência, pode ser utilizado no dbeaver.
+
+## 4.2. Arquitetura e Modelagem (DDL)
 
 ### **Justificativa de Desnormalização (Opção A)**
 
@@ -154,7 +187,7 @@ Nesta etapa, estruturei o ambiente de banco de dados utilizando **PostgreSQL** (
 
 ---
 
-## 4.2. Análise Crítica das Queries Analíticas
+## 4.3. Análise Crítica das Queries Analíticas
 
 ### **Query 1: Crescimento Percentual (Window Functions)**
 
