@@ -248,3 +248,41 @@ As rotas de listagem não retornam apenas arrays puros, mas um objeto estruturad
 * **Loading:** Implementado via estados reativos (`isLoading`), exibindo feedbacks visuais enquanto as requisições assíncronas são processadas.
 * **Erros de Rede:** Centralizados através de um interceptor no Axios, exibindo mensagens específicas para o usuário (ex: "CNPJ não encontrado") em vez de falhas silenciosas no console.
 * **Dados Vazios:** Tratamento visual para buscas que não retornam resultados, orientando o usuário a refinar os filtros.
+
+# 6. Para rodar a aplicação, você precisará de dois terminais abertos simultaneamente: um para o servidor de dados (Backend) e outro para a interface visual (Frontend).
+
+### 6.1. Pré-requisitos
+* **Python 3.10+**
+* **Node.js 18+**
+* **Gerenciador de pacotes npm**
+Certifique-se de já ter rodado o código para instalar as depências previamente com pip install -r requirements.txt, dentro do venv na pasta raiz do projeto
+
+---
+
+### 6.2. Configurando o Backend (FastAPI)
+
+Abra o terminal e navegue até a pasta do backend:
+cd .\teste4.0\backend\
+Para iniciar o servidor: uvicorn main_api:app --reload
+
+### 6.3. Configurando o Frontend (Vue.Js)
+
+Abra o terminal e navegue até a pasta do frontend:
+cd .\teste4.0\frontend\
+instale as dependências npm install
+Para iniciar o servidor: npm run dev
+
+### 6.4 Abrindo a interface
+
+No navergador insira na url este endereço "http://localhost:5173/"
+
+## Considerações Finais e Aprendizado
+
+Este projeto foi um desafio enriquecedor que me permitiu integrar tecnologias de ponta como **FastAPI** e **Vue.js 3**.
+
+**Sobre o Frontend:**
+Embora minha especialidade atual e maior experiência técnica estejam concentradas no **Backend** (Python/SQL), aceitei o desafio de desenvolver a interface em **Vue.js** para entregar uma solução Full Stack completa. 
+
+Tenho ciência de que ainda há muito a explorar no ecossistema de frontend, e encaro este teste como um ponto de partida. Estou empenhado em aprofundar meus conhecimentos nesta área para ser capaz de contribuir em todas as camadas da aplicação.
+
+---
