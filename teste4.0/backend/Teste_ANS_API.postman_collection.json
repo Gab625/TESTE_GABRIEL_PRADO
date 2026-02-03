@@ -1,0 +1,111 @@
+{
+  "info": {
+    "_postman_id": "c6dab6d7-028b-4b3a-8c95-e51de7bcdede",
+    "name": "Teste_ANS_API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49807069"
+  },
+  "item": [
+    {
+      "name": "get_operadoras",
+      "request": {
+        "auth": {
+          "type": "inherit"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:8000/api/operadoras",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "operadoras"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_operadoras_by_cnpj",
+      "request": {
+        "auth": {
+          "type": "inherit"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:8000/api/operadoras/19541931000125",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "operadoras",
+            "19541931000125"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": "1",
+              "type": "text",
+              "id": 0,
+              "sortOrder": 0,
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_despesas_by_cnpj",
+      "request": {
+        "auth": {
+          "type": "inherit"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:8000/api/operadoras/58119199000151/despesas",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "operadoras",
+            "58119199000151",
+            "despesas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_media_despesas_agregadas_top5",
+      "request": {
+        "auth": {
+          "type": "inherit"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:8000/api/estatisticas",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "estatisticas"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

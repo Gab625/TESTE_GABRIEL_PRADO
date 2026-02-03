@@ -229,3 +229,22 @@ As estatísticas agregadas na rota `/api/estatisticas` são processadas via SQL 
 As rotas de listagem não retornam apenas arrays puros, mas um objeto estruturado.
 * **Formato:** `{ "metadata": { "total": 0, "page": 0, ... }, "data": [...] }`
 * **Justificativa:** Essa estrutura é pensada na **facilidade de uso pelo Frontend (Vue.js)**. Ao fornecer o total de registros e páginas no "envelope" da resposta, o componente de interface consegue renderizar a barra de navegação e os contadores de forma autônoma, sem precisar de novas requisições para contar registros.
+
+### 5.5. A interface foi desenvolvida utilizando **Vue.js 3** com a **Composition API**, focando em performance, usabilidade e visual moderno com **Tailwind CSS**.
+
+#### 5.5.1. Estratégia de Busca e Filtro: **Busca no Servidor (Opção A)**
+* **Escolha:** Realizar filtros via query parameters no Backend.
+* **Justificativa:** Como a base de dados da ANS é extensa, carregar todos os registros no navegador para filtrar localmente (Client-side) degradaria a performance e aumentaria o consumo de memória do usuário. A busca no servidor garante que apenas os dados necessários para a visualização atual sejam trafegados, mantendo a interface leve e rápida.
+
+#### 5.5.2. Gerenciamento de Estado: **Composables e Reatividade Nativa (Opção C)**
+* **Escolha:** Uso de `ref`, `reactive` e lógica encapsulada em funções.
+* **Justificativa:** Para a complexidade deste desafio, o uso de Vuex ou Pinia traria um "boilerplate" desnecessário. A escolha de **Composables** permite o compartilhamento de lógica (como chamadas de API e estados de loading) de forma modular, limpa e perfeitamente integrada ao ciclo de vida do Vue 3.
+
+#### 5.5.3. Performance da Tabela: **Paginação Baseada em Offset**
+* **Escolha:** Renderização apenas da página atual (10 registros por vez).
+* **Justificativa:** Para garantir uma boa experiência de usuário (UX) sem travamentos (lags) de renderização. O frontend solicita ao servidor apenas o "pedaço" (slice) dos dados que o usuário deseja ver, permitindo navegar em milhões de registros com consumo de CPU/RAM constante no cliente.
+
+#### 5.5.4. Tratamento de Erros e Loading
+* **Loading:** Implementado via estados reativos (`isLoading`), exibindo feedbacks visuais enquanto as requisições assíncronas são processadas.
+* **Erros de Rede:** Centralizados através de um interceptor no Axios, exibindo mensagens específicas para o usuário (ex: "CNPJ não encontrado") em vez de falhas silenciosas no console.
+* **Dados Vazios:** Tratamento visual para buscas que não retornam resultados, orientando o usuário a refinar os filtros.
